@@ -6,6 +6,7 @@ import FluxTumorDimensions from '../model/oncology/FluxTumorDimensions';
 import FluxTumorMargins from '../model/oncology/FluxTumorMargins';
 import ClinicalTrialsList from '../clinicalTrials/ClinicalTrialsList.jsx';
 import FluxNotesTreatmentOptionsRestClient from 'flux_notes_treatment_options_rest_client';
+import {seerdata} from './Seerdata.js';
 const api = new FluxNotesTreatmentOptionsRestClient.DefaultApi();
 
 /*
@@ -2069,21 +2070,21 @@ export default class SummaryMetadata {
 
     getTreatmentData = (patient, condition, subsection) => {
         if (Lang.isNull(patient) || Lang.isNull(condition)) return [];
-        try {
-            // If we have cached data, use that instead of making an API call
-            if (subsection.data_cache) return subsection.data_cache;
-            // Commenting out the api call with actual patient criteria til we get patient data
-            const data = api.findTreatmentOptionsByPatientStats(condition.codeURL, {race: this.toFirstLetterCapital(patient.getPatient().race), dxGrade: condition.getMostRecentHistologicalGrade().getGradeAsSimpleNumber()});
-            //const data = api.findTreatmentOptionsByPatientStats("http://snomed.info/sct/399068003", {race: "Black"});
-            const parsedData = JSON.parse(data);
-            if(parsedData[0].length === 0 && parsedData[1].length === 0){
-                return "No relevant data found for patient";
-            }
-            return parsedData;
+        const treatmentOptions = ['Chemo', 'Chemo+Rad', 'Hormonal', 'Radiation',
+        'Surgery', 'Surg+Rad', 'No-Treatment'];
+        let deceasedSeries = [];
+        let aliveSeries = [];
+
+        seerdata.forEach((v) => {
+        if(v.Disease === 'prostate cancer' && v.Race === 'Black' && v['Dx-Grade'] === 'Grade II' && v['Is-Alive'] === 'Dead'){
+            deceasedSeries.push([ treatmentOptions.indexOf(v['Treat-option'])  , v['Survival-months'] ]);
         }
-        catch(error) {
-            return "Server unavailable";
-        }
+        if(v.Disease === 'prostate cancer' && v.Race === 'Black' && v['Dx-Grade'] === 'Grade II' && v['Is-Alive'] === 'Alive'){
+            aliveSeries.push([ treatmentOptions.indexOf(v['Treat-option'])  , v['Survival-months'] ]);
+        }  
+        });
+
+        return [aliveSeries, deceasedSeries];
     }
 }
 
