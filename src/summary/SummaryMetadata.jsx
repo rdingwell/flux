@@ -1364,8 +1364,9 @@ export default class SummaryMetadata {
                     },
                     // adding new section for treatment options
                     {
-                        name: "Treatment Options",
+                        name: "Treatment Options (Demo)",
                         shortName: "Treatments",
+                        notFiltered: true,
                         type: "ClusterPoints",
                         data: [
                             {
