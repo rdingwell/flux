@@ -20,6 +20,53 @@ function StructuredFieldPlugin(opts) {
     let insertText = opts.insertText;
     const clearStructuredFieldMap = opts.structuredFieldMapManager.clearStructuredFieldMap;
 
+    function onKeyDown(e, key, state) {
+        console.log('here')
+        /* if(e.key === 'Backspace'){
+            const parent = state.document.getParent(state.selection.anchorKey);
+            //const inline = parent.getInlines();
+            //console.log(inline)
+            //const keyToShortcutMap = opts.structuredFieldMapManager.keyToShortcutMap;
+            //console.log(keyToShortcutMap)
+            /* let shortcut;
+            if(inline.size > 0) {
+                shortcut = opts.structuredFieldMapManager.keyToShortcutMap.get(inline[0].key);
+            } 
+            const shortcut = opts.structuredFieldMapManager.keyToShortcutMap.get(parent.key);
+            console.log(parent)
+            console.log(shortcut)
+            
+            if(shortcut && shortcut instanceof InsertValue){
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        } 
+        */
+        const parent = state.document.getParent(state.selection.anchorKey);
+        
+        const keyToShortcutMap = opts.structuredFieldMapManager.keyToShortcutMap;
+        if(e.key === 'Backspace'){
+            console.log(state.selection.anchorKey)
+            const previousNode = state.document.getPreviousSibling(state.selection.anchorKey);
+            console.log(previousNode)
+            if (previousNode.type === 'structured_field' && state.selection.anchorOffset === 0 && state.selection.isCollapsed) {
+                console.log('this is the case we want');
+                //delete the whole node
+                const shortcut = previousNode.get('data').get('shortcut');
+                let transform = state.transform;
+                transform = transform.moveToRangeOf(shortcut).deleteBackward();
+                console.log(shortcut)
+
+            }
+            console.log(state.document.getPreviousSibling(state.selection.anchorKey))
+            console.log(state)
+            console.log(parent)
+            console.log(keyToShortcutMap)
+        }
+        
+        
+    }
+
     function onChange(state, editor) {
         var deletedKeys = [];
         const keyToShortcutMap = opts.structuredFieldMapManager.keyToShortcutMap;
@@ -59,9 +106,9 @@ function StructuredFieldPlugin(opts) {
             structured_field: props => {
                 let shortcut = props.node.get('data').get('shortcut');
                 if (shortcut instanceof InsertValue) {
-                    return <span contentEditable={false} className='structured-field-inserter' {...props.attributes}>{shortcut.getText()}{props.children}</span>;
+                    return <span contentEditable={false} className='structured-field-inserter' {...props.attributes}>{props.children}</span>;
                 } else {
-                    return <span contentEditable={false} className='structured-field-creator' {...props.attributes}>{shortcut.getText()}{props.children}</span>;
+                    return <span contentEditable={false} className='structured-field-creator' {...props.attributes}>{props.children}</span>;
                 }
             },
             bolded_structured_field: props => {
@@ -317,6 +364,7 @@ function StructuredFieldPlugin(opts) {
 	return {
 	    clearStructuredFieldMap,
         onChange,
+        onKeyDown,
         onCut,
         onCopy,
         onPaste,
@@ -383,11 +431,11 @@ function insertStructuredFieldAtRange(opts, transform, shortcut, range) {
  * @return {State.Block}
  */
 function createStructuredField(opts, shortcut) {
-	let nodes = [];
+	let nodes = [Slate.Text.createFromString(String(shortcut.getText() + " "))];
     const properties = {
         type:  opts.typeStructuredField,
         nodes: nodes,
-        isVoid: true,
+        //isVoid: true,
         data: {
             shortcut: shortcut
         }

@@ -577,6 +577,7 @@ const Node = {
    */
 
   getFragmentAtRange(range) {
+    debugger;
     let node = this
     let nodes = new List()
 
