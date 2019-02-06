@@ -73,7 +73,6 @@ export default function mcode(state = defaultState, action) {
         return { ...state };
     } else if (action.type === types.PROCESS_SIMILAR_PATIENT_OUTCOMES) {
         const { totalPatients, similarPatients } = filterSeerData(state.similarPatientProps);
-
         return {
             ...state,
             totalPatients,

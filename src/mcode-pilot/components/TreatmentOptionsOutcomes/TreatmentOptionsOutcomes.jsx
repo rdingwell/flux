@@ -12,7 +12,7 @@ import './TreatmentOptionsOutcomes.css';
 
 const TREATMENT_NAMES = {
     'noTreatment': 'none (actively monitoring)',
-    'chemo': 'chemotherapy',
+    'chemotherapy': 'chemotherapy',
     'hormonal': 'hormonal therapy',
     'surgery': 'surgery',
     'radiation': 'radiation therapy'
@@ -36,7 +36,7 @@ export default class TreatmentOptionsOutcomes extends Component {
 
         this.state = {
             includedTreatments: [ 'surgery' ],
-            comparedTreatments: [ 'chemo', 'hormonal', 'radiation' ],
+            comparedTreatments: [ 'chemotherapy', 'hormonal', 'radiation' ],
             includedOpen: false,
             comparedOpen: false
         };
@@ -145,7 +145,7 @@ export default class TreatmentOptionsOutcomes extends Component {
                 active={false}
             />
         );
-    }
+     }
 
     renderRow(row, compareRow) {
         if (row.length === 0) return null;
@@ -167,7 +167,7 @@ export default class TreatmentOptionsOutcomes extends Component {
                 </div>
 
                 <div className="flex flex-4 flex-padding flex-center">
-                    <div className="flex-1">{Math.floor(sideEffects.totalReporting / totalPatients * 100)}%</div>
+                    <div className="flex-1"></div>
 
                     <div className="flex-3">
                         {topSideEffects.map(({ sideEffect, occurrences }, i) =>
