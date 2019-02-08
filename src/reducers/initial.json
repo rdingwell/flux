@@ -37,12 +37,12 @@
              "ER": {
                 "selected": true,
                 "displayText": "ER",
-                "value": "negative"
+                "value": "positive"
              },
              "PR": {
                 "selected": true,
                 "displayText": "PR",
-                "value": "positive"
+                "value": "negative"
              },
              "HER2": {
                 "selected": true,
@@ -50,18 +50,18 @@
                 "value": "positive"
              },
              "grade": {
-                "selected": true,
+                "selected": false,
                 "displayText": "grade",
-                "value": 3
+                "value": 2
              },
              "stage": {
-                "selected": true,
+                "selected": false,
                 "displayText": "stage",
                 "value": "IIA"
              }
              ,
              "size": {
-                "selected": true,
+                "selected": false,
                 "displayText": "size (mm)",
                 "minValue": 10,
                 "maxValue": 20
@@ -69,48 +69,48 @@
           }
        },
        "treatmentHistory": {
-          "selected": true,
+          "selected": false,
           "displayText": "treatment history",
           "options": {
              "hadSurgery": {
-                "selected": true,
+                "selected": false,
                 "displayText": "had surgery",
                 "value": "yes"
              },
              "receivedRadTherapy": {
-                "selected": true,
+                "selected": false,
                 "displayText": "received radiation therapy",
                 "value": "yes"
              },
              "receivedChemo": {
-                "selected": true,
+                "selected": false,
                 "displayText": "received chemotherapy",
                 "value": "yes"
              }
           }
        },
        "genetics": {
-          "selected": true,
+          "selected": false,
           "displayText": "genetics",
           "options": {
              "BRCA1": {
-                "selected": true,
+                "selected": false,
                 "displayText": "BRCA1",
                 "value": "negative"
              },
              "BRCA2": {
-                "selected": true,
+                "selected": false,
                 "displayText": "BRCA2",
                 "value": "negative"
              }
           }
        },
        "medicalHistory": {
-          "selected": true,
+          "selected": false,
           "displayText": "medical history",
           "options": {
              "ECOG": {
-                "selected": true,
+                "selected": false,
                 "displayText": "ECOG score",
                 "minValue": 2,
                 "maxValue": 3

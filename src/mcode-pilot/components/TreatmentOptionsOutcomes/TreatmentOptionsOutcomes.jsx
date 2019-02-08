@@ -15,7 +15,7 @@ const TREATMENT_NAMES = {
     'chemotherapy': 'chemotherapy',
     'hormonal': 'hormonal therapy',
     'surgery': 'surgery',
-    'radiation': 'radiation therapy'
+    'radiation': 'radiation'
 };
 
 const SIDE_EFFECT_NAMES = {
@@ -27,7 +27,9 @@ const SIDE_EFFECT_NAMES = {
     'bowelDys': 'Bowel Dysfunction',
     'erectileDys': 'Erectile Dysfunction',
     'weightLoss': 'Weight Loss',
-    'urinaryDys': 'Urinary Dysfunction'
+    'urinaryDys': 'Urinary Dysfunction',
+    'Fatigue': 'Fatigue',
+    'Nausea and vomiting': 'Nausea'
 };
 
 export default class TreatmentOptionsOutcomes extends Component {
@@ -189,7 +191,7 @@ export default class TreatmentOptionsOutcomes extends Component {
                     <div className="flex-1">{this.renderBarChart(row, compareRow, 'fiveYrSurvival')}</div>
                 </div>
 
-                <div className="flex flex-4 flex-padding flex-center">
+                <div className="flex flex-2 flex-padding flex-center">
                     <div>
                         {topSideEffects.map(({ sideEffect, occurrences }, i) =>
                             <div key={i}>
@@ -218,8 +220,8 @@ export default class TreatmentOptionsOutcomes extends Component {
                     </div>
                 </div>
 
-                <div className="flex-4 flex-padding">
-                    <div className="header-title">Reporting severe side effects</div>
+                <div className="flex-2 flex-padding">
+                    <div className="header-title">Side effects</div>
                     <div>leading cause</div>
                 </div>
             </div>
