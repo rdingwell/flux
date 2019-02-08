@@ -90,27 +90,27 @@ export class CoreCancerPilotApp extends Component {
     }
 
     loadPatient(patientId) {
-        if (this.dataAccess.getGestalt().requestTypes.async) { 
-            this.dataAccess.getPatient(patientId, (patient, error) => { 
+        if (this.dataAccess.getGestalt().read.async) { 
+            this.dataAccess.getPatient(patientId, (patient, error) => {
                 if (!Lang.isEmpty(error)) console.error(error)
-                this.setState({ 
-                    patient, 
+                this.setState({
+                    patient,
                     loading: false,
                     loadingError: error
                 });
             });
-        } else { 
+        } else {
             // Assume sync
             try {
                 let patient = this.dataAccess.getPatient(patientId);
-                this.setState({ 
-                    patient, 
+                this.setState({
+                    patient,
                     loading: false
                 });
             } catch (error) {
                 console.error(error)
                 this.setState({
-                    loading: false, 
+                    loading: false,
                     loadingError: error
                 });
             }
@@ -119,8 +119,8 @@ export class CoreCancerPilotApp extends Component {
 
     componentDidMount = () => {
         document.title = this.props.display;
-        // If we have a custom logoObject, we should update our favicons 
-        if (!Lang.isEmpty(this.props.logoObject)) { 
+        // If we have a custom logoObject, we should update our favicons
+        if (!Lang.isEmpty(this.props.logoObject)) {
             const icons = document.querySelectorAll('link[rel="icon"]');
             icons.forEach((icon) => {
                 icon.href = this.props.logoObject.path;
@@ -215,10 +215,10 @@ export class CoreCancerPilotApp extends Component {
         this.setState({ isAppBlurred });
     }
 
-    renderLoadingInformation = () => { 
+    renderLoadingInformation = () => {
         // Note well: The renders below fade in or out based on state of the loading in the app
-        // We define a loading error as occuring when: 
-        // - The app has no patient 
+        // We define a loading error as occuring when:
+        // - The app has no patient
         // - The app is not loading
         const isSomeError = Lang.isEmpty(this.state.patient) && !this.state.loading;
         return (
@@ -267,7 +267,7 @@ export class CoreCancerPilotApp extends Component {
                         {this.renderLoadingInformation()}
                         <Fade in={!this.state.loading} timeout={this.timeoutDuration}>
                             <div>
-                                {!Lang.isNull(this.state.patient) && 
+                                {!Lang.isNull(this.state.patient) &&
                                     <CoreCancerPilotDashboard
                                         // App default settings
                                         actions={[]}
@@ -291,7 +291,7 @@ export class CoreCancerPilotApp extends Component {
                                     />
                                 }
                             </div>
-                        </Fade> 
+                        </Fade>
                         <Modal
                             aria-labelledby="simple-modal-title"
                             aria-describedby="simple-modal-description"
