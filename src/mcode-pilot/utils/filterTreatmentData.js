@@ -10,16 +10,6 @@ const TREATMENT_NAMES = {
     'radiation': 'radiation therapy'
 };
 
-import { isSame, getCombinations } from './arrayCompare';
-
-const TREATMENT_NAMES = {
-    'noTreatment': 'none (actively monitoring)',
-    'chemotherapy': 'chemotherapy',
-    'hormonal': 'hormonal therapy',
-    'surgery': 'surgery',
-    'radiation': 'radiation therapy'
-};
-
 const SIDE_EFFECT_NAMES = {
     'hotFlash': 'Hot Flashes',
     'decLibido': 'Decreased Libido',
@@ -38,11 +28,11 @@ export default function filterTreatmentData(similarPatientProps, includedTreatme
     const similarPatients = transformedTreatmentData.filter(treatmentDataPatient => isSimilarPatient(treatmentDataPatient, similarPatientProps));
     const totalSimilarPatients = similarPatients.length;
     const similarPatientTreatments = generateSimilarPatientTreatments(similarPatients);
-    const includedTreatmentData = generateTreatmentData(similarPatients, [includedTreatments]);
-    const comparedTreatmentCombinations = getCombinations(comparedTreatments).filter(treatments =>
+    const includedTreatmentData = generateTreatmentData(similarPatients, [includedTreatments], includedTreatments);
+    const comparedTreatmentCombinations = getCombinations(comparedTreatments, includedTreatments).filter(treatments =>
         treatments.length !== includedTreatments.length || !includedTreatments.every(treatment => treatments.includes(treatment))
     );
-    const comparedTreatmentData = generateTreatmentData(similarPatients, comparedTreatmentCombinations);
+    const comparedTreatmentData = generateTreatmentData(similarPatients, comparedTreatmentCombinations, includedTreatments);
 
     return {
         totalPatients,
@@ -53,10 +43,10 @@ export default function filterTreatmentData(similarPatientProps, includedTreatme
     };
 }
 
-function initializeTreatmentData(name) {
+function initializeTreatmentData(displayName) {
     return {
         id: _.uniqueId('row_'),
-        name,
+        displayName,
         totalPatients: 0,
         oneYrSurvival: 0,
         threeYrSurvival: 0,
@@ -68,14 +58,24 @@ function initializeTreatmentData(name) {
     };
 }
 
-function generateTreatmentData(similarPatients, treatments) {
+function generateTreatmentData(similarPatients, treatments, includedTreatments) {
     if (similarPatients.length === 0) return [];
+    console.debug('similarPatients:', similarPatients);
+    console.debug('treatments:', treatments);
+    console.debug('includedTreatments:', includedTreatments);
 
     let treatmentData = [];
     treatments.forEach(treatment => {
         const filteredPatients = similarPatients.filter(patient => isSame(patient.treatments, treatment));
-        const treatmentName = _.isArray(treatment) ? treatment.map(name => TREATMENT_NAMES[name]).join(' & ') : TREATMENT_NAMES[treatment];
-        let row = initializeTreatmentData(treatmentName);
+        let displayName = _.isArray(treatment) ?
+            treatment === includedTreatments ?
+                treatment.map(name => TREATMENT_NAMES[name]).join(' & ') :
+                treatment.filter((treat)=>{
+                    return !includedTreatments.includes(treat);
+                }).map(name => TREATMENT_NAMES[name]).join(' & ') :
+            TREATMENT_NAMES[treatment];
+
+        let row = initializeTreatmentData(displayName);
         filteredPatients.forEach(patient => {
             row.totalPatients += 1;
 
@@ -99,6 +99,7 @@ function generateTreatmentData(similarPatients, treatments) {
         }
     });
 
+    console.debug('treatmentData:', treatmentData);
     return treatmentData;
 }
 
