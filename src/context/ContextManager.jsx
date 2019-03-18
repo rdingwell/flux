@@ -109,7 +109,9 @@ class ContextManager {
 
     // returns undefined if not found
     getActiveContextOfType = (contextType) => {
+        console.log(this.activeContexts);
         let context = Collection.find(this.activeContexts, (item) => {
+            console.log(item.getShortcutType());
             return (item.getShortcutType() === contextType);
         });
 
@@ -127,6 +129,7 @@ class ContextManager {
 
     adjustActiveContexts(shouldContextBeActive) {
         this.activeContexts = [];
+        console.log(this.contexts);
         this.contexts.forEach((context) => {
             if (shouldContextBeActive(context)) {
                 this.activeContexts.push(context);

@@ -9,6 +9,7 @@ import EndDateTime from '../shr/core/EndDateTime';
 import Timing from '../shr/core/Timing';
 import ExpectedPerformanceTime from '../shr/base/ExpectedPerformanceTime';
 import Type from '../shr/core/Type';
+import Lang from 'lodash';
 import moment from 'moment';
 import lookup from '../../lib/MedicationInformationService.jsx';
 import CodeableConcept from '../shr/core/CodeableConcept';
@@ -16,16 +17,25 @@ import CodeSystem from '../shr/core/CodeSystem';
 import Code from '../shr/core/Code';
 import Coding from '../shr/core/Coding';
 import DisplayText from '../shr/core/DisplayText';
+import Metadata from '../shr/base/Metadata';
+import FluxEntry from '../base/FluxEntry';
+import Reason from '../shr/base/Reason';
 
-class FluxMedicationRequested {
-    constructor(json) {
+class FluxMedicationRequested extends FluxEntry {
+    constructor(json, patient) {
+        super();
+        this._patient = patient;
         this._medicationRequested = MedicationRequested.fromJSON(json);
         if (!this._medicationRequested.entryInfo) {
             let entry = new Entry();
             entry.entryType = new EntryType();
             entry.entryType.uri = 'http://standardhealthrecord.org/spec/shr/medication/MedicationRequested';
             this._medicationRequested.entryInfo = entry;
-          }
+        }
+        if (Lang.isUndefined(json) || Lang.isEmpty(json)) {
+            const today = new moment().format("D MMM YYYY");
+            this.startDate = today;
+        }
     }
 
     /*
@@ -68,9 +78,9 @@ class FluxMedicationRequested {
         if (!this._medicationRequested.expectedPerformanceTime.value) {
             this._medicationRequested.expectedPerformanceTime.value = new TimePeriod();
         }
-        const timePeriodStart = new BeginDateTime();
-        timePeriodStart.value = date;
-        this._medicationRequested.expectedPerformanceTime.value.timePeriodStart = timePeriodStart;
+        const beginDateTime = new BeginDateTime();
+        beginDateTime.value = date;
+        this._medicationRequested.expectedPerformanceTime.value.beginDateTime = beginDateTime;
     }
 
     get endDate() {
@@ -84,9 +94,9 @@ class FluxMedicationRequested {
         if (!this._medicationRequested.expectedPerformanceTime.value) {
             this._medicationRequested.expectedPerformanceTime.value = new TimePeriod();
         }
-        const timePeriodEnd = new EndDateTime();
-        timePeriodEnd.value = date;
-        this._medicationRequested.expectedPerformanceTime.value.timePeriodEnd = timePeriodEnd;
+        const endDateTime = new EndDateTime();
+        endDateTime.value = date;
+        this._medicationRequested.expectedPerformanceTime.value.endDateTime = endDateTime;
     }
 
     isActiveAsOf(date) {
@@ -131,6 +141,7 @@ class FluxMedicationRequested {
      *  Returns displayText string for medication
      */
     get medication() {
+        if (!this._medicationRequested.medication) return null;
         return this._displayTextOrCode(this._medicationRequested.medication.type.value.coding[0]);
     }
 
@@ -194,7 +205,7 @@ class FluxMedicationRequested {
      *  Returns object with value and units
      */
     get timingOfDoses() {
-        if (!this._medicationRequested.dosage) return null;
+        if (!this._medicationRequested.dosage || !this._medicationRequested.dosage.timingOfDoses) return null;
         let timingOfDoses = this._medicationRequested.dosage.timingOfDoses;
         if (timingOfDoses.timing.recurrencePattern && timingOfDoses.timing.recurrencePattern instanceof RecurrencePattern) {
             let units;
@@ -239,6 +250,11 @@ class FluxMedicationRequested {
         return this._medicationRequested.metadata.informationRecorder || null;
     }
 
+    set prescribedBy(who) {
+        if (!this._medicationRequested.metadata) this._medicationRequested.metadata = new Metadata();
+        this._medicationRequested.metadata.informationRecorder = who;
+    }
+
     /*
      * Getter for when prescribed, using the creation time of the entry as the time prescribed
      * Returns date as a string
@@ -253,6 +269,13 @@ class FluxMedicationRequested {
      */
     get reasons() {
         return this._medicationRequested.reason || [];
+    }
+
+    addReason(cond) {
+        if (!Lang.isArray(this._medicationRequested.reason)) this._medicationRequested.reason = [];
+        const reason = new Reason();
+        reason.value = this._patient.createEntryReferenceTo(cond);
+        this._medicationRequested.reason.push(reason); 
     }
 
     get code() {
@@ -270,11 +293,12 @@ class FluxMedicationRequested {
     }
 
     get asNeededIndicator() {
+        if (!this._medicationRequested.dosage) return null;
         return this._medicationRequested.dosage.asNeededIndicator.value;
     }
 
     get doseInstructionsText() {
-        return this._medicationRequested.dosage.dosageInstructionsText ? this._medicationRequested.dosage.dosageInstructionsText.value : null;
+        return (this._medicationRequested.dosage && this._medicationRequested.dosage.dosageInstructionsText) ? this._medicationRequested.dosage.dosageInstructionsText.value : null;
     }
 
     /**
