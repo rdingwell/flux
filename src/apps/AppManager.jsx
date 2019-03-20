@@ -1,4 +1,4 @@
-import { CoreCancerPilotApp } from '../containers/CoreCancerPilotApp';
+import { CompassApp } from '../containers/CompassApp';
 import FullApp from '../containers/FullApp';
 import SlimApp from '../containers/SlimApp';
 import SmartApp from '../containers/SmartApp';
@@ -117,7 +117,7 @@ export default class AppManager {
             {
                 path: '/ccp',
                 display: 'Compass',
-                app: CoreCancerPilotApp,
+                app: CompassApp,
                 isExact: true,
                 dataSource: 'HardCodedMcodeV05DataSource',
                 patientId: '788dcbc3-ed18-470c-89ef-35ff91854c7g',
@@ -131,7 +131,7 @@ export default class AppManager {
             {
                 path: '/ccp2',
                 display: 'Compass',
-                app: CoreCancerPilotApp,
+                app: CompassApp,
                 isExact: true,
                 dataSource: 'HardCodedMcodeV01DataSource',
                 patientId: '788dcbc3-ed18-470c-89ef-35ff91854c7f',
