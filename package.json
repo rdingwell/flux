@@ -79,8 +79,7 @@
     "npm-run-all": "^4.1.2",
     "react-scripts": "0.9.5",
     "react-test-renderer": "15.6.2",
-    "testcafe": "0.17.1",
-    "webpack-dev-server": "3.1.11"
+    "testcafe": "0.17.1"
   },
   "resolutions": {
     "moment": "2.22.0",
