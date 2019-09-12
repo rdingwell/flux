@@ -64,7 +64,7 @@
     "slate": "0.20.2",
     "slate-auto-replace": "0.5.0",
     "superagent": "3.7.0",
-    "sync-request": "^4.1.0",
+    "sync-request": "^6.1.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
