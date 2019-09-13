@@ -21,7 +21,7 @@
     "font-awesome": "4.7.0",
     "fuse.js": "^3.3.0",
     "highcharts": "^6.2.0",
-    "history": "^4.7.2",
+    "history": "^4.10.1",
     "immutable": "3.8.1",
     "interact.js": "1.2.8",
     "lodash": "4.17.13",
