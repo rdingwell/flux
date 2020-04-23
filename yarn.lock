@@ -9328,12 +9328,12 @@ react-copy-to-clipboard@5.0.0:
     copy-to-clipboard "^3"
     prop-types "^15.5.8"
 
-react-day-picker@6.2.1:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/react-day-picker/-/react-day-picker-6.2.1.tgz#fc22b809db792386d1468d3f46d725ad91e04db9"
+react-day-picker@7.4.8:
+  version "7.4.8"
+  resolved "https://registry.yarnpkg.com/react-day-picker/-/react-day-picker-7.4.8.tgz#675625240d3fae1b41c0a9d5177c968c8517c1d4"
+  integrity sha512-pp0hnxFVoRuBQcRdR1Hofw4CQtOCGVmzCNrscyvS0Q8NEc+UiYLEDqE5dk37bf0leSnBW4lheIt0CKKhuKzDVw==
   dependencies:
-    object-assign "^4.1.1"
-    prop-types "^15.6.0"
+    prop-types "^15.6.2"
 
 react-dev-utils@^8.0.0:
   version "8.0.0"
